@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+  <link rel="icon" type="image/png" href="heart.png">
+<head>
+    <title>stella mars's webpage</title>
+
+    <link rel="stylesheet" href="digital.css">
+    <script type="text/javascript">
+        // <![CDATA[
+        var colour="random"; // in addition to "random" can be set to any valid colour eg "#f0f" or "red"
+        var sparkles=50;
+        
+        /****************************
+        *  Tinkerbell Magic Sparkle *
+        *(c)2005-13 mf2fm web-design*
+        *  http://www.mf2fm.com/rv  *
+        * DON'T EDIT BELOW THIS BOX *
+        ****************************/
+        var x=ox=400;
+        var y=oy=300;
+        var swide=800;
+        var shigh=600;
+        var sleft=sdown=0;
+        var tiny=new Array();
+        var star=new Array();
+        var starv=new Array();
+        var starx=new Array();
+        var stary=new Array();
+        var tinyx=new Array();
+        var tinyy=new Array();
+        var tinyv=new Array();
+        
+        window.onload=function() { if (document.getElementById) {
+          var i, rats, rlef, rdow;
+          for (var i=0; i<sparkles; i++) {
+            var rats=createDiv(3, 3);
+            rats.style.visibility="hidden";
+            rats.style.zIndex="999";
+            document.body.appendChild(tiny[i]=rats);
+            starv[i]=0;
+            tinyv[i]=0;
+            var rats=createDiv(5, 5);
+            rats.style.backgroundColor="transparent";
+            rats.style.visibility="hidden";
+            rats.style.zIndex="999";
+            var rlef=createDiv(1, 5);
+            var rdow=createDiv(5, 1);
+            rats.appendChild(rlef);
+            rats.appendChild(rdow);
+            rlef.style.top="2px";
+            rlef.style.left="0px";
+            rdow.style.top="0px";
+            rdow.style.left="2px";
+            document.body.appendChild(star[i]=rats);
+          }
+          set_width();
+          sparkle();
+        }}
+        
+        function sparkle() {
+          var c;
+          if (Math.abs(x-ox)>1 || Math.abs(y-oy)>1) {
+            ox=x;
+            oy=y;
+            for (c=0; c<sparkles; c++) if (!starv[c]) {
+              star[c].style.left=(starx[c]=x)+"px";
+              star[c].style.top=(stary[c]=y+1)+"px";
+              star[c].style.clip="rect(0px, 5px, 5px, 0px)";
+              star[c].childNodes[0].style.backgroundColor=star[c].childNodes[1].style.backgroundColor=(colour=="random")?newColour():colour;
+              star[c].style.visibility="visible";
+              starv[c]=50;
+              break;
+            }
+          }
+          for (c=0; c<sparkles; c++) {
+            if (starv[c]) update_star(c);
+            if (tinyv[c]) update_tiny(c);
+          }
+          setTimeout("sparkle()", 40);
+        }
+        
+        function update_star(i) {
+          if (--starv[i]==25) star[i].style.clip="rect(1px, 4px, 4px, 1px)";
+          if (starv[i]) {
+            stary[i]+=1+Math.random()*3;
+            starx[i]+=(i%5-2)/5;
+            if (stary[i]<shigh+sdown) {
+              star[i].style.top=stary[i]+"px";
+              star[i].style.left=starx[i]+"px";
+            }
+            else {
+              star[i].style.visibility="hidden";
+              starv[i]=0;
+              return;
+            }
+          }
+          else {
+            tinyv[i]=50;
+            tiny[i].style.top=(tinyy[i]=stary[i])+"px";
+            tiny[i].style.left=(tinyx[i]=starx[i])+"px";
+            tiny[i].style.width="2px";
+            tiny[i].style.height="2px";
+            tiny[i].style.backgroundColor=star[i].childNodes[0].style.backgroundColor;
+            star[i].style.visibility="hidden";
+            tiny[i].style.visibility="visible"
+          }
+        }
+        
+        function update_tiny(i) {
+          if (--tinyv[i]==25) {
+            tiny[i].style.width="1px";
+            tiny[i].style.height="1px";
+          }
+          if (tinyv[i]) {
+            tinyy[i]+=1+Math.random()*3;
+            tinyx[i]+=(i%5-2)/5;
+            if (tinyy[i]<shigh+sdown) {
+              tiny[i].style.top=tinyy[i]+"px";
+              tiny[i].style.left=tinyx[i]+"px";
+            }
+            else {
+              tiny[i].style.visibility="hidden";
+              tinyv[i]=0;
+              return;
+            }
+          }
+          else tiny[i].style.visibility="hidden";
+        }
+        
+        document.onmousemove=mouse;
+        function mouse(e) {
+          if (e) {
+            y=e.pageY;
+            x=e.pageX;
+          }
+          else {
+            set_scroll();
+            y=event.y+sdown;
+            x=event.x+sleft;
+          }
+        }
+        
+        window.onscroll=set_scroll;
+        function set_scroll() {
+          if (typeof(self.pageYOffset)=='number') {
+            sdown=self.pageYOffset;
+            sleft=self.pageXOffset;
+          }
+          else if (document.body && (document.body.scrollTop || document.body.scrollLeft)) {
+            sdown=document.body.scrollTop;
+            sleft=document.body.scrollLeft;
+          }
+          else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
+            sleft=document.documentElement.scrollLeft;
+            sdown=document.documentElement.scrollTop;
+          }
+          else {
+            sdown=0;
+            sleft=0;
+          }
+        }
+        
+        window.onresize=set_width;
+        function set_width() {
+          var sw_min=999999;
+          var sh_min=999999;
+          if (document.documentElement && document.documentElement.clientWidth) {
+            if (document.documentElement.clientWidth>0) sw_min=document.documentElement.clientWidth;
+            if (document.documentElement.clientHeight>0) sh_min=document.documentElement.clientHeight;
+          }
+          if (typeof(self.innerWidth)=='number' && self.innerWidth) {
+            if (self.innerWidth>0 && self.innerWidth<sw_min) sw_min=self.innerWidth;
+            if (self.innerHeight>0 && self.innerHeight<sh_min) sh_min=self.innerHeight;
+          }
+          if (document.body.clientWidth) {
+            if (document.body.clientWidth>0 && document.body.clientWidth<sw_min) sw_min=document.body.clientWidth;
+            if (document.body.clientHeight>0 && document.body.clientHeight<sh_min) sh_min=document.body.clientHeight;
+          }
+          if (sw_min==999999 || sh_min==999999) {
+            sw_min=800;
+            sh_min=600;
+          }
+          swide=sw_min;
+          shigh=sh_min;
+        }
+        
+        function createDiv(height, width) {
+          var div=document.createElement("div");
+          div.style.position="absolute";
+          div.style.height=height+"px";
+          div.style.width=width+"px";
+          div.style.overflow="hidden";
+          return (div);
+        }
+        
+        function newColour() {
+          var c=new Array();
+          c[0]=255;
+          c[1]=Math.floor(Math.random()*256);
+          c[2]=Math.floor(Math.random()*(256-c[1]/2));
+          c.sort(function(){return (0.5 - Math.random());});
+          return ("rgb("+c[0]+", "+c[1]+", "+c[2]+")");
+        }
+        // ]]>
+        </script>
+</head>
+
+
+    <h1> <strong>stella mars</strong></h1>
+    <p>hello welcome to my summer reading game!</p>
+
+
+
+  <!--nav bar-->
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    body {
+      margin: auto;
+      font-family: Times New Roman;
+    }
+    
+    .topnav {
+      overflow: hidden;
+      background-color: #333;
+    }
+    
+    .topnav a {
+      float: left;
+      color: #f2f2f2;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      font-size: 17px;
+    }
+    
+    .topnav a:hover {
+      background-color: #ffd6e8;
+      color: rgb(141, 84, 94);
+    }
+    
+    .topnav a.active {
+      background-color: #eca6bb;
+      color: white;
+    }
+    </style>
+    </head>
+
+    <body>
+      <div class="topnav">
+        <a class="active" href="index.html">home</a>
+        <a href="studies.html">color studies</a>
+        <a href="video.html">video project</a>
+        <a href="blender.html">blender</a>
+        <a href="digital.html">illustrations</a>
+        <a href="glitch.html">glitch art</a>
+      </div>
+      
+    </body>
+
+<body>
+ 
+     <!--recent art-->
+  
+  <h2>character illustrations</h2>
+  
+
+  <a href="odette.jpg"><img src="odette.jpg" alt="screenshot" ></a>
+  
+<h3>summer picnic</h3>
+<h4>Medium: Procreate (July, 2023)</h4>
+<p>Character illustration I had done for my original character, Odette. I was inspired by the warmth of summer and wanted to create a piece that encapsulates the 
+  feeling of a summer picnic. I added cherries since they seem to be such a summer fruit! I also wanted to experiment with the lighting and shading in this piece which I thought turned out very nicely. 
+</p>
+
+
+  </span>
+</div>
+<div>
+  <a href="vyn.jpg"><img src="vyn.jpg" alt="screenshot" ></a>
+  <h3>knight</h3>
+  <h4>Medium: Procreate (September, 2024)</h4>
+<p>
+As a HoYoverse official content creator, I created this piece for a chaarcter birthday event. It features one of the five main characters from their game, Tears of Themis, Vyn Richter. I wanted to create a piece that was both dynamic and detailed, and I think I achieved that with this piece.
+I also explored different methods in creating a stained glass look for the background. I basically spent mos of my time messing around with colors and layer modes for the desired effect. I am very proud of the lighting I ended up creating for this piece. It's such a mesmerizing glow!
+
+</p>
+
+</div>
+
+<div>
+  <a href="siren.jpg"><img src="siren.jpg" alt="screenshot" ></a>
+<h3>dangerous waters</h3>
+<h4>Medium: Procreate (January, 2025)</h4>
+<p>
+Listening to the soundtrack for "Pirates of the Caribbean: On Stranger Tides", I was inspired by the portrayal of the mermaids in the movie. The haunting melody resonated with me so deeply that I wanted to create a piece based off of the mermaids. 
+Dangerous yet beautiful, I wanted to emphasize the duality by using lighting and colors. Using murky colors for the deep sea, it compliments the glowing pale figure of the mermaid. Overall, this piece came out better than I intended so I am really proud of the outcome!
+
+</p>
+</div>
+
+<div>
+  <a href="angel.jpg"><img src="angel.jpg" alt="screenshot" ></a>
+ <h3>pure light</h3>
+ <h4>Medium: Procreate(July, 2023)</h4>
+ <p>
+For this piece, I wanted to stick to a muted color palette with using yellows and desaturated blues. It was a challenge but I took inspiration from angel statues and lighting from cinematic films. 
+Which ended up as an ethereal piece depicting an angel reaching for the light. 
+
+ </p>
+ 
+</div>
+
+<div>
+  <a href="bones.jpg"><img src="bones.jpg" alt="screenshot" ></a>
+<h3>hands in hands: a dance with death</h3>
+<h4>Medium: Procreate(August, 2023)</h4>
+<p>
+
+  Following a similar challenge as 'pure light,' I used a limited color palette with only using the primary colors. 
+  Listening to 'The Phantom of the Opera' soundtrack, I wanted to encapsulate the gothic romance of the musical. I enjoyed the lighting in this piece! It was
+  fun seeing the entire piece come together with the lighting and shadows. I also enjoyed creating the details of the dress and veil.
+</p>
+
+</div>
+
+<div>
+  <a href="josie.jpg"><img src="josie.jpg" alt="screenshot" ></a>
+<h3>blue ice, yellow sun</h3>
+<h4>Medium: Procreate(September, 2023)</h4>
+<p>
+Playing around with layers and lighting, I wanted to put empahsis on the character's unique eye colors. From my own original character collection, Josie sports a pair of heterocrhomia eyes that are blue and yellow. 
+To make her eyes stand out more, I decided to create the piece with dimmer lighting to really bring out the glow. 
+
+</p>
+
+</div>
+  <h2>tarot collection</h2>
+  <a href="fool.jpg"><img src="fool.jpg" alt="screenshot" ></a>
+  <a href="priestess.jpg"><img src="priestess.jpg" alt="screenshot" ></a>
+  <a href="magician.jpg"><img src="magician.jpg" alt="screenshot" ></a>
+ 
+     
+  <h4>Medium: Procreate(November, 2023)</h4>
+  <p>
+I was once obsessed with tarot cards in 2023 and because of my interest, I was inspired to create designs of my own. I did research by readings books on the topic, consulted people who are seasoned in tarot, and did a bunch 
+of googling and referencing online. With such research, I compiled the first three cards of the Major Arcana: The Fool, The Priestess, and The Magician. 
+
+  </p>
+  
+  <img src = "logo.jpg">
+</body>
+</html>
